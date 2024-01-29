@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import orderModel from "../models/orderModel.js";
 import { comparePassword, hashPassword } from "../helpers/authHelpper.js";
 import JWT from "jsonwebtoken";
+import queryModel from "../models/queryModel.js";
 
 export const registerController = async (req, res) => {
   try {
@@ -155,6 +156,46 @@ res.status(200).send({
 }
 
 
+// contact us contoller
+export const queryController = async (req, res) => {
+  try {
+    const { name, email, phone, query} = req.body;
+    //validations
+    if (!name) {
+      return res.send({ message: "Name is Required" });
+    }
+    if (!email) {
+      return res.send({ message: "Email is Required" });
+    }
+    if (!phone) {
+      return res.send({ message: "Phone no is Required" });
+    }
+    if (!query) {
+      return res.send({ message: "Concern is Required" });
+    }
+    //save
+    const user = await new queryModel({
+      name,
+      email,
+      phone,
+      query
+    }).save();
+
+    res.status(201).send({
+      success: true,
+      message: "Query Submitted Successfully",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Errro in Query Submission",
+      error,
+    });
+  }
+};
+
 //test controller
 export const testController = (req, res) => {
   try {
@@ -165,6 +206,30 @@ export const testController = (req, res) => {
   }
 };
 
+// recied query controller
+export const recivedQueryController = async (req, res) => {
+ queryModel.find({}, (err, data) => {
+  if (err) {
+    console.log(err);
+    res.status(500).send('Error fetching data from MongoDB');
+  } else {
+    res.json(data);
+  }
+});
+};
+
+//  Users List
+export const usersController = async (req, res) => {
+  userModel.find({}, (err, data) => {
+   if (err) {
+     console.log(err);
+     res.status(500).send('Error fetching data from MongoDB');
+   } else {
+     res.json(data);
+   }
+ });
+ };
+ 
 
 
 //update prfole
