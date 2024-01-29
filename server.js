@@ -1,3 +1,9 @@
+import express from "express";
+import colors from "colors";
+import dotenv from "dotenv";
+import morgan from "morgan";
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoute.js";
 import cors from "cors";
 import categoryRoutes from './routes/categoryRoutes.js';
 import productRoutes from './routes/productRoutes.js';
@@ -35,6 +41,7 @@ app.use('*',function(req,res){
 
 //PORT
 const PORT = process.env.PORT || 8080;
+
 //run listen
 app.listen(PORT, () => {
   console.log(
